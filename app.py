@@ -11,9 +11,14 @@ st.title("🔮 AI Astrology Consultation")
 
 # Load environment variables
 load_dotenv()
-API_KEY = os.getenv("GEMINI_API_KEY")
+# Try to load local .env (only needed locally)
+load_dotenv()
+
+# Get API key from environment variables
+API_KEY = os.environ.get("GEMINI_API_KEY")
+
 if not API_KEY:
-    st.error("GEMINI_API_KEY not found")
+    st.error("GEMINI_API_KEY not found. Set it in .env for local or in Streamlit Secrets for Cloud.")
     st.stop()
 
 # Initialize session state
