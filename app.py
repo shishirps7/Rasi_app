@@ -90,9 +90,6 @@ if st.button("Add Query Again"):
     for key in ["name", "dob", "birth_time", "problem", "types_of_solution"]:
         if key in st.session_state:
             del st.session_state[key]
-
-
-
 # def load_rashi_data():
 #     with open("rashi.json", "r") as f:
 #         return json.load(f)
