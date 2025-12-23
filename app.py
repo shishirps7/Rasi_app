@@ -29,15 +29,17 @@ if "response" not in st.session_state:
 
 # Show form if flag is True
 if st.session_state.show_form:
-    name = st.text_input("Enter your name")
+    name = st.text_input("Enter your name", key="name")
     date = st.date_input(
         "Enter your date of birth",
         min_value=datetime.date(1800, 1, 1),
         max_value=datetime.date.today(),
+        key="dob"
     )
-    time = st.time_input("Enter your time of birth")
-    problem = st.text_area("What problems are you facing?")
-    types_of_solution = st.text_area("What kind of solutions are you looking for?")
+    time = st.time_input("Enter your time of birth", key="birth_time")
+    problem = st.text_area("What problems are you facing?", key="problem")
+    types_of_solution = st.text_area("What kind of solutions are you looking for?", key="types_of_solution") # noqa
+
 
 client = genai.Client()
 
@@ -82,10 +84,13 @@ if not st.session_state.show_form and st.session_state.response:
     st.write(st.session_state.response)
 
 # Add Query Again button
-if not st.session_state.show_form and st.button("Add Query Again"):
-    st.session_state.show_form = True          # show form again
-    st.session_state.response = None           # remove previous response
-      # remove previous response
+if st.button("Add Query Again"):
+    st.session_state.show_form = True
+    st.session_state.response = None
+    for key in ["name", "dob", "birth_time", "problem", "types_of_solution"]:
+        if key in st.session_state:
+            del st.session_state[key]
+
 
 
 # def load_rashi_data():
