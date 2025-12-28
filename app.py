@@ -11,8 +11,6 @@ st.title("🔮 AI Astrology Consultation")
 
 # Load environment variables
 load_dotenv()
-# Try to load local .env (only needed locally)
-load_dotenv()
 
 # Get API key from environment variables
 API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -36,6 +34,9 @@ if st.session_state.show_form:
         max_value=datetime.date.today(),
         key="dob"
     )
+    language = st.selectbox("Select your preferred language or if you want you can add your custom language in below box", ["English", "Hindi","custom"], key="language")  # noqa 
+    if language == "custom":
+        custom_language = st.text_input("Enter your preferred language", key="custom_language")  # noqa
     time = st.time_input("Enter your time of birth", key="birth_time")
     problem = st.text_area("What problems are you facing?", key="problem")
     types_of_solution = st.text_area("What kind of solutions are you looking for?", key="types_of_solution") # noqa
@@ -50,12 +51,15 @@ if st.session_state.show_form and st.button("Submit"):
     else:
         st.session_state.show_form = False  # hide form
         prompt = f"""
-You are an experienced vedic astrology guide. Use vedic astrology principles to provide insights and solutions based on the user's details and problems. # noqa
+You are an experienced vedic astrology guide. Use vedic astrology principles to provide insights and solutions based on the user's details, problems and language in which they want the response. # noqa
 
 Person details:
 Name: {name}
 Date of Birth: {date}
 Time of Birth: {time}
+
+language:
+{language if language != "custom" else custom_language}
 
 Problem:
 {problem}
@@ -76,7 +80,7 @@ Keep the tone calm and supportive.
                 model="gemini-2.5-flash",
                 contents=prompt
             )
-            st.session_state.response = response.text  # store response in session
+            st.session_state.response = response.text  # store response in session # noqa
 
 # Display the response if it exists and form is hidden
 if not st.session_state.show_form and st.session_state.response:
